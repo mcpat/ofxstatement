@@ -1,6 +1,7 @@
 """Statement model"""
 
 from datetime import datetime
+import hashlib
 
 
 TRANSACTION_TYPES = [
@@ -156,6 +157,30 @@ def generate_transaction_id(stmt_line):
     return str(abs(hash((stmt_line.date,
                          stmt_line.memo,
                          stmt_line.amount))))
+
+
+def generate_stable_transaction_id(stmt_line):
+    """Generate stable pseudo-unique id for given statement line.
+
+    This function can be used in statement parsers when real transaction id is
+    not available in source statement.
+
+    This function differs from generate_transaction_id in that it generates
+    ids which are reproducible during different runs on the same input.
+    """
+    if stmt_line.bank_account_to is None:
+        values = (str(stmt_line.date),
+                  stmt_line.memo,
+                  str(stmt_line.amount))
+    else:
+        values = (str(stmt_line.date),
+                  str(stmt_line.amount),
+                  stmt_line.bank_account_to.bank_id,
+                  stmt_line.bank_account_to.acct_id)
+
+    md5 = hashlib.md5((",".join(values)).encode())
+    result = str(abs(int(md5.hexdigest()[:16], 16)))
+    return result
 
 
 def recalculate_balance(stmt):
