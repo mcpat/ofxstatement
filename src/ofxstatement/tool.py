@@ -126,6 +126,7 @@ def convert(args):
     parser = p.get_parser(args.input)
     try:
         statement = parser.parse()
+        statement.assert_valid()
     except exceptions.ParseError as e:
         log.error("Parse error on line %s: %s" % (e.lineno, e.message))
         return 2  # error

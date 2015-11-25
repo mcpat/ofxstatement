@@ -52,6 +52,16 @@ class Statement(object):
         self.account_id = account_id
         self.currency = currency
 
+    def assert_valid(self):
+        """Ensure that all required fields are set
+        """
+        assert self.currency, "default currency missing"
+        assert self.bank_id, "bank id missing"
+        assert self.account_id, "account id missing"
+        assert self.start_date, "start date for transaction data missing"
+        assert self.end_date, "end date for transaction data missing"
+        assert self.end_balance, "(ledger) balance value missing"
+
 
 class StatementLine(object):
     """Statement line data.
@@ -119,6 +129,10 @@ class StatementLine(object):
         assert self.trntype in TRANSACTION_TYPES, \
             "trntype must be one of %s" % TRANSACTION_TYPES
 
+        assert self.date, "date transaction was posted missing"
+        assert self.amount, "transaction amount missing"
+        assert self.id, "transaction id missing"
+
         if self.bank_account_to:
             self.bank_account_to.assert_valid()
 
@@ -151,6 +165,8 @@ class BankAccount(object):
         self.acct_key = None
 
     def assert_valid(self):
+        assert self.bank_id, "bank id missing"
+        assert self.acct_id, "account id missing"
         assert self.acct_type in ACCOUNT_TYPE, \
             "acct_type must be one of %s" % ACCOUNT_TYPE
 
