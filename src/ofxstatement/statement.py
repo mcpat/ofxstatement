@@ -74,6 +74,9 @@ class StatementLine(object):
     # Date user initiated transaction, if known
     date_user = ""
 
+    # Date funds are available (value date)
+    date_avail = ""
+
     # Check (or other reference) number
     check_no = ""
 
@@ -87,6 +90,9 @@ class StatementLine(object):
     # Optional BankAccount instance
     bank_account_to = None
 
+    # Optional alternative currency
+    currency = None
+
     def __init__(self, id=None, date=None, memo=None, amount=None):
         self.id = id
         self.date = date
@@ -94,6 +100,7 @@ class StatementLine(object):
         self.amount = amount
 
         self.date_user = None
+        self.date_avail = None
         self.payee = None
         self.check_no = None
         self.refnum = None

@@ -97,16 +97,17 @@ class OfxWriter(object):
         tb = self.tb
         tb.start("STMTTRN", {})
 
-        self.buildText("TRNTYPE", line.trntype)
-        self.buildDate("DTPOSTED", line.date)
+        self.buildText("TRNTYPE", line.trntype, False)
+        self.buildDate("DTPOSTED", line.date, False)
         self.buildDate("DTUSER", line.date_user)
-        self.buildAmount("TRNAMT", line.amount)
-        self.buildText("FITID", line.id)
+        self.buildDate("DTAVAIL", line.date_avail)
+        self.buildAmount("TRNAMT", line.amount, False)
+        self.buildText("FITID", line.id, False)
         self.buildText("CHECKNUM", line.check_no)
         self.buildText("NAME", line.payee)
         self.buildText("MEMO", line.memo)
         self.buildText("REFNUM", line.refnum)
-        #self.buildText("CURRENCY", line.currency)
+        self.buildText("CURRENCY", line.currency)
         if line.bank_account_to:
             tb.start("BANKACCTTO", {})
             self.buildBankAccount(line.bank_account_to)
@@ -115,39 +116,37 @@ class OfxWriter(object):
         tb.end("STMTTRN")
 
     def buildBankAccount(self, account):
-        self.buildText("BANKID", account.bank_id)
+        self.buildText("BANKID", account.bank_id, False)
         self.buildText("BRANCHID", account.branch_id)
-        self.buildText("ACCTID", account.acct_id)
-        self.buildText("ACCTTYPE", account.acct_type)
+        self.buildText("ACCTID", account.acct_id, False)
+        self.buildText("ACCTTYPE", account.acct_type, False)
         self.buildText("ACCTKEY", account.acct_key)
 
-    def buildText(self, tag, text, skipEmpty=True):
-        if not text and skipEmpty:
-            return
+    def buildText(self, tag, text, optional=True):
+        if not text:
+            if optional:
+                return
+            # missing mandatory element
+            raise ValueError("missing value for '%s'" % tag)
+
         self.tb.start(tag, {})
         self.tb.data(text or "")
         self.tb.end(tag)
 
-    def buildDate(self, tag, dt, skipEmpty=True):
-        if not dt and skipEmpty:
-            return
+    def buildDate(self, tag, dt, optional=True):
         if dt is None:
-            self.buildText(tag, "", skipEmpty)
+            self.buildText(tag, "", optional)
         else:
             self.buildText(tag, dt.strftime("%Y%m%d"))
 
-    def buildDateTime(self, tag, dt, skipEmpty=True):
-        if not dt and skipEmpty:
-            return
+    def buildDateTime(self, tag, dt, optional=True):
         if dt is None:
-            self.buildText(tag, "", skipEmpty)
+            self.buildText(tag, "", optional)
         else:
             self.buildText(tag, dt.strftime("%Y%m%d%H%M%S"))
 
-    def buildAmount(self, tag, amount, skipEmpty=True):
-        if amount is None and skipEmpty:
-            return
+    def buildAmount(self, tag, amount, optional=True):
         if amount is None:
-            self.buildText(tag, "", skipEmpty)
+            self.buildText(tag, "", optional)
         else:
             self.buildText(tag, "%.2f" % amount)
