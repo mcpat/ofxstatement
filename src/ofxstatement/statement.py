@@ -3,6 +3,11 @@
 from datetime import datetime
 import hashlib
 
+try:
+    from math import isclose
+except:
+    def isclose(a, b, rel_tol=1e-09, abs_tol=0.0):
+        return abs(a-b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
 
 TRANSACTION_TYPES = [
     "CREDIT",       # Generic credit
@@ -53,11 +58,17 @@ class Statement(object):
         self.currency = currency
 
     def assert_valid(self):
-        """Ensure that all required fields are set
+        """Ensure that fields have valid values
         """
         assert self.currency, "default currency missing"
+
         assert self.bank_id, "bank id missing"
+        assert len(self.bank_id) <= 9, "bank id '%s' too long" % self.bank_id
+
         assert self.account_id, "account id missing"
+        assert len(self.account_id) <= 22, \
+            "account id '%s' too long" % self.acct_id
+
         assert self.start_date, "start date for transaction data missing"
         assert self.end_date, "end date for transaction data missing"
         assert self.end_balance, "(ledger) balance value missing"
@@ -101,7 +112,7 @@ class StatementLine(object):
     bank_account_to = None
 
     # Optional alternative currency
-    currency = None
+    currency = ""
 
     def __init__(self, id=None, date=None, memo=None, amount=None):
         self.id = id
@@ -114,6 +125,7 @@ class StatementLine(object):
         self.payee = None
         self.check_no = None
         self.refnum = None
+        self.currency = None
 
     def __str__(self):
         return """
@@ -131,10 +143,27 @@ class StatementLine(object):
 
         assert self.date, "date transaction was posted missing"
         assert self.amount, "transaction amount missing"
+
         assert self.id, "transaction id missing"
+        assert len(self.id) <= 255, "transaction id '%s' too long" % self.id
 
         if self.bank_account_to:
             self.bank_account_to.assert_valid()
+
+        if self.payee:
+            assert len(self.payee) <= 32, "payee '%s' too long" % self.payee
+
+        if self.check_no:
+            assert len(self.check_no) <= 12, \
+                "check number '%s' too long" % self.check_no
+
+        if self.refnum:
+            assert len(self.refnum) <= 32, \
+                "reference number '%s' too long" % self.refnum
+
+        if self.currency:
+            assert len(self.currency) != 3, \
+                "invalid currency '%s'" % self.currency
 
 
 class BankAccount(object):
@@ -156,19 +185,33 @@ class BankAccount(object):
     # Checksum for international banks
     acct_key = ""
 
-    def __init__(self, bank_id, acct_id, acct_type="CHECKING"):
+    def __init__(self, bank_id, acct_id, acct_type="CHECKING", branch_id=None,
+                 acct_key=None):
         self.bank_id = bank_id
         self.acct_id = acct_id
         self.acct_type = acct_type
 
-        self.branch_id = None
-        self.acct_key = None
+        self.branch_id = branch_id
+        self.acct_key = acct_key
 
     def assert_valid(self):
         assert self.bank_id, "bank id missing"
+        assert len(self.bank_id) <= 9, "bank id '%s' too long" % self.bank_id
+
         assert self.acct_id, "account id missing"
+        assert len(self.acct_id) <= 22, \
+            "account id '%s' too long" % self.acct_id
+
         assert self.acct_type in ACCOUNT_TYPE, \
             "acct_type must be one of %s" % ACCOUNT_TYPE
+
+        if self.acct_key:
+            assert len(self.acct_key) <= 22, \
+                "account key '%s' too long" % self.acct_key
+
+        if self.branch_id:
+            assert len(self.branch_id) <= 22, \
+                "branch id '%s' too long" % self.branch_id
 
 
 def generate_transaction_id(stmt_line):
@@ -221,3 +264,14 @@ def recalculate_balance(stmt):
     stmt.end_balance = stmt.start_balance + total_amount
     stmt.start_date = min(sl.date for sl in stmt.lines)
     stmt.end_date = max(sl.date for sl in stmt.lines)
+
+
+def check_balance(stmt):
+    """Utility function to check the correctness of the given balances.
+
+    It sums over all transactions and compares the result plus starting balance
+    with the end balance. If both values are close enough (equality check is
+    not applicable for floating point numbers) it returns True. False otherwise
+    """
+    total_amount = sum(sl.amount for sl in stmt.lines)
+    return isclose(stmt.start_balance + total_amount, stmt.end_balance)

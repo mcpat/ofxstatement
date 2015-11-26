@@ -1,7 +1,23 @@
 import csv
-from datetime import datetime
+import re
 
+from datetime import datetime
 from ofxstatement.statement import Statement, StatementLine
+
+
+IBAN_PATTERN = re.compile("^[A-Z]{2}[0-9]{2}[A-Z0-9]{1,30}$")
+IBAN_FORMATTINGS = {
+    "AT": {"bank_id": (4, 9), "acct_id": (9, 20)},
+    "BE": {"bank_id": (4, 7), "acct_id": (7, 14), "acct_key": (14, 16)},
+    "CH": {"bank_id": (4, 9), "acct_id": (9, 21)},
+    "DE": {"bank_id": (4, 12), "acct_id": (12, 22)},
+    "DK": {"bank_id": (4, 8), "acct_id": (8, 17), "acct_key": (17, 18)},
+    "FR": {"bank_id": (4, 9), "branch_id": (9, 14), "acct_id": (14, 25),
+           "acct_key": (25, 27)},
+    "GB": {"bank_id": (4, 8), "branch_id": (8, 14), "acct_id": (14, 22)},
+    "IT": {"acct_key": (4, 5), "bank_id": (5, 10), "branch_id": (10, 15),
+           "acct_id": (15, 27)},
+}
 
 
 class StatementParser(object):
@@ -40,6 +56,29 @@ class StatementParser(object):
         """Parse given transaction line and return StatementLine object
         """
         raise NotImplementedError
+
+    def parse_iban(self, iban):
+        """Splits the IBAN into its parts.
+
+        The result depends on the country that is also encoded in the IBAN.
+        You can directly feed the map returned by this function as keyword
+        arguments to the constructor of the BankAccount class!
+        """
+
+        # first remove spaces (if present)
+        iban = iban.replace(" ", "")
+
+        # check if it is really an IBAN
+        m = IBAN_PATTERN.match(iban)
+        result = dict()
+
+        # now separate everything
+        if m is not None:
+            f = IBAN_FORMATTINGS[iban[:2]]
+            for name, (start, end) in f.items():
+                result[name] = iban[start:end].lstrip("0")
+
+        return result
 
     def parse_value(self, value, field):
         tp = type(getattr(StatementLine, field))

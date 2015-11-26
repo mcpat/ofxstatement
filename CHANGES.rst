@@ -5,11 +5,14 @@ Changes
 0.6.0 (unreleased)
 ==================
 
-- Support for specifying account information for each parsed satatement
+- Support for specifying account information for each parsed statement
   line and translate it to BANKACCTTO aggregate in OFX.
 
 - Command line option to display debugging information (--debug).
 
+- Stricter checking of statement, statement lines and OFX output
+- Support for value date if present.
+- Info about ofxstatement is now included in the status message
 
 0.5.0 (2013-11-03)
 ==================

@@ -1,5 +1,6 @@
 from datetime import datetime
 from xml.etree import ElementTree as etree
+from ofxstatement.configuration import APP_NAME, APP_VERSION
 
 
 class OfxWriter(object):
@@ -46,12 +47,14 @@ class OfxWriter(object):
         tb.start("SIGNONMSGSRSV1", {})
         tb.start("SONRS", {})
         tb.start("STATUS", {})
-        self.buildText("CODE", "0")
-        self.buildText("SEVERITY", "INFO")
+        self.buildText("CODE", "0", False)
+        self.buildText("SEVERITY", "INFO", False)
+        self.buildText("MESSAGE", "Created by %s (%s)" % (APP_NAME,
+                                                          APP_VERSION))
         tb.end("STATUS")
 
-        self.buildDateTime("DTSERVER", self.genTime)
-        self.buildText("LANGUAGE", "ENG")
+        self.buildDateTime("DTSERVER", self.genTime, False)
+        self.buildText("LANGUAGE", "ENG", False)
 
         tb.end("SONRS")
         tb.end("SIGNONMSGSRSV1")
@@ -63,8 +66,8 @@ class OfxWriter(object):
 
         self.buildText("TRNUID", "0")
         tb.start("STATUS", {})
-        self.buildText("CODE", "0")
-        self.buildText("SEVERITY", "INFO")
+        self.buildText("CODE", "0", False)
+        self.buildText("SEVERITY", "INFO", False)
         tb.end("STATUS")
 
         tb.start("STMTRS", {})
@@ -72,7 +75,7 @@ class OfxWriter(object):
         tb.start("BANKACCTFROM", {})
         self.buildText("BANKID", self.statement.bank_id, False)
         self.buildText("ACCTID", self.statement.account_id, False)
-        self.buildText("ACCTTYPE", "CHECKING")
+        self.buildText("ACCTTYPE", "CHECKING", False)
         tb.end("BANKACCTFROM")
 
         tb.start("BANKTRANLIST", {})

@@ -6,6 +6,7 @@ from ofxstatement.exceptions import Abort
 
 APP_NAME = 'ofxstatement'
 APP_AUTHOR = 'ofx'
+APP_VERSION = "0.6.0.dev"
 
 
 def get_default_location():
