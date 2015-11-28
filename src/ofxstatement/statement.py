@@ -142,7 +142,7 @@ class StatementLine(object):
             "trntype must be one of %s" % TRANSACTION_TYPES
 
         assert self.date, "date transaction was posted missing"
-        assert self.amount, "transaction amount missing"
+        assert self.amount is not None, "transaction amount missing"
 
         assert self.id, "transaction id missing"
         assert len(self.id) <= 255, "transaction id '%s' too long" % self.id
