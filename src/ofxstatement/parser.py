@@ -65,6 +65,9 @@ class StatementParser(object):
         arguments to the constructor of the BankAccount class!
         """
 
+        # FIXME: for some countries (like Egypt) the account ID will not fit
+        #        into the acct_id field...
+
         # first remove spaces (if present)
         iban = iban.replace(" ", "")
 

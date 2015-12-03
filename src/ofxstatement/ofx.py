@@ -18,9 +18,9 @@ class OfxWriter(object):
         encoded = etree.tostring(et.getroot(), "utf-8")
         encoded = str(encoded, "utf-8")
         header = ("<!-- \n"
-                  "OFXHEADER:100\n"
+                  "OFXHEADER:160\n"
                   "DATA:OFXSGML\n"
-                  "VERSION:102\n"
+                  "VERSION:106\n"
                   "SECURITY:NONE\n"
                   "ENCODING:UTF-8\n"
                   "CHARSET:NONE\n"
