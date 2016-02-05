@@ -87,13 +87,16 @@ Plugin                            Description
 
 `banking.statements.osuuspankki`_ Finnish Osuuspankki bank
 `banking.statements.nordea`_      Nordea bank (at least Finnish branch of it)
-`ofxstatement-1822direkt`_        German bank 1822direk.com
+`ofxstatement-1822direkt`_        German bank 1822direkt.com
 `ofxstatement-austrian`_          Plugins for several banks, operating in Austria:
                                   Easybank, ING-Diba, Livebank, Raiffeisenbank.
 `ofxstatement-postfinance`_       Swiss PostFinance (E-Finance Java text based bank/credit statements).
 `ofxstatement-mbank-sk`_          MBank.sk
 `ofxstatement-be-keytrade`_       KeytradeBank (Belgium)
 `ofxstatement-betterment`_        Betterment (https://www.betterment.com/)
+`ofxstatement-simple`_            Simple (the bank, https://www.simple.com/) JSON financial statement format
+`ofxstatement-latvian`_           Latvian banks
+`ofxstatement-iso20022`_          Support for generic ISO-20022 format
 ================================= ============================================
 
 
@@ -108,6 +111,9 @@ Plugin                            Description
 .. _ofxstatement-mbank-sk: https://github.com/epitheton/ofxstatement-mbank-sk
 .. _ofxstatement-be-keytrade: https://github.com/Scotchy49/ofxstatement-be-keytrade
 .. _ofxstatement-betterment: https://github.com/cmayes/ofxstatement-betterment
+.. _ofxstatement-simple: https://github.com/cmayes/ofxstatement-simple
+.. _ofxstatement-latvian: https://github.com/gintsmurans/ofxstatement-latvian
+.. _ofxstatement-iso20022: https://github.com/kedder/ofxstatement-iso20022
 
 Advanced Configuration
 ======================
@@ -129,7 +135,7 @@ Sample configuration file::
     [swedbank]
     plugin = swedbank
 
-    [dabske:usd]
+    [danske:usd]
     plugin = litas-esis
     charset = cp1257
     currency = USD
