@@ -82,6 +82,8 @@ Plugin                            Description
                                   format (e.g., FIO banka, module
                                   ``gpc``).
 
+`ofxstatement-unicreditcz`_       Plugin for UniCredit Bank Czech Republic and Slovakia
+`ofxstatement-otp`_               Plugin for OTP Bank, operating in Hungary
 `ofxstatement-bubbas`_            Set of plugins, developed by @bubbas:
                                   ``dkb_cc`` and ``lbbamazon``.
 
@@ -93,15 +95,23 @@ Plugin                            Description
 `ofxstatement-postfinance`_       Swiss PostFinance (E-Finance Java text based bank/credit statements).
 `ofxstatement-mbank-sk`_          MBank.sk
 `ofxstatement-be-keytrade`_       KeytradeBank (Belgium)
+`ofxstatement-be-ing`_            ING (Belgium)
 `ofxstatement-betterment`_        Betterment (https://www.betterment.com/)
 `ofxstatement-simple`_            Simple (the bank, https://www.simple.com/) JSON financial statement format
 `ofxstatement-latvian`_           Latvian banks
 `ofxstatement-iso20022`_          Support for generic ISO-20022 format
+`ofxstatement-seb`_               SEB (Sweden), it parses Export.xlsx for private accounts
+`ofxstatement-alfabank`_          AlfaBank (Russia), it parses movementList.csv for private accounts
+`ofxstatement-paypal`_            PayPal, it parses *.csv for private accounts
+`ofxstatement-polish`_            Support for some Polish banks and financial institutions
+`ofxstatement-russian`_           Support for several Russian banks: Avangard, Tinkoff, Sberbank (debit).
 ================================= ============================================
 
 
 .. _ofxstatement-lithuanian: https://github.com/kedder/ofxstatement-lithuanian
-.. _ofxstatement-czech: https://github.com/mcepl/ofxstatement-czech
+.. _ofxstatement-czech: https://gitlab.com/mcepl/ofxstatement-czech
+.. _ofxstatement-unicreditcz: https://github.com/milankni/ofxstatement-unicreditcz
+.. _ofxstatement-otp: https://github.com/abesto/ofxstatement-otp
 .. _ofxstatement-bubbas: https://github.com/bubbas/ofxstatement-bubbas
 .. _banking.statements.osuuspankki: https://github.com/koodaamo/banking.statements.osuuspankki
 .. _banking.statements.nordea: https://github.com/koodaamo/banking.statements.nordea
@@ -110,11 +120,16 @@ Plugin                            Description
 .. _ofxstatement-postfinance: https://pypi.python.org/pypi/ofxstatement-postfinance
 .. _ofxstatement-mbank-sk: https://github.com/epitheton/ofxstatement-mbank-sk
 .. _ofxstatement-be-keytrade: https://github.com/Scotchy49/ofxstatement-be-keytrade
+.. _ofxstatement-be-ing: https://github.com/TheoMarescaux/ofxstatement-be-ing
 .. _ofxstatement-betterment: https://github.com/cmayes/ofxstatement-betterment
 .. _ofxstatement-simple: https://github.com/cmayes/ofxstatement-simple
 .. _ofxstatement-latvian: https://github.com/gintsmurans/ofxstatement-latvian
 .. _ofxstatement-iso20022: https://github.com/kedder/ofxstatement-iso20022
-
+.. _ofxstatement-seb: https://github.com/themalkolm/ofxstatement-seb
+.. _ofxstatement-alfabank: https://github.com/themalkolm/ofxstatement-alfabank
+.. _ofxstatement-paypal: https://github.com/themalkolm/ofxstatement-paypal
+.. _ofxstatement-polish: https://github.com/yay6/ofxstatement-polish
+.. _ofxstatement-russian: https://github.com/gerasiov/ofxstatement-russian
 Advanced Configuration
 ======================
 
